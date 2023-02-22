@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Welcome</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+	</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="./css/main.css">
+	<script>
+		function log(text) {
+		//  document.querySelector('#log').textContent += text + 
+		document.querySelector('#log').innerHTML += text + "<br>";
+		//  document.write(text + "<br>");
+		}
+
+		async function onButtonClick(c_name) {
+		let filters = [];
+
+		let filterName = c_name;
+		if (filterName) {
+			filters.push({name: filterName});
+		}
+		let options = {};
+		options.filters = filters;
+		// log('Requesting Bluetooth Scan with options: ' + JSON.stringify(options));
+		const scan = await navigator.bluetooth.requestLEScan(options);
+
+		// log('Scan started with:');
+		// log(' acceptAllAdvertisements: ' + scan.acceptAllAdvertisements);
+		log(' active: ' + scan.active);
+		log(' keepRepeatedDevices: ' + scan.keepRepeatedDevices);
+		log(' filters: ' + JSON.stringify(scan.filters));
+
+		navigator.bluetooth.addEventListener('advertisementreceived', event => {
+		log('Advertisement received.');
+		log('  Device Name: ' + event.device.name);
+		log('  Device ID: ' + event.device.id);
+		log('  RSSI: ' + event.rssi);
+		log('  TX Power: ' + event.txPower);
+		log('  UUIDs: ' + event.uuids);
+		event.manufacturerData.forEach((valueDataView, key) => {
+			logDataView('Manufacturer', key, valueDataView);
+		});
+		event.serviceData.forEach((valueDataView, key) => {
+			logDataView('Service', key, valueDataView);
+		});
+		});
+
+		setTimeout(stopScan, 10000);
+		function stopScan() {
+		log('Stopping scan...');
+		scan.stop();
+		log('Stopped.  scan.active = ' + scan.active);
+		}
+}
+
+/* Utils */
+
+const logDataView = (labelOfDataSource, key, valueDataView) => {
+  const hexString = [...new Uint8Array(valueDataView.buffer)].map(b => {
+    return b.toString(16).padStart(2, '0');
+  }).join(' ');
+  const textDecoder = new TextDecoder('ascii');
+  const asciiString = textDecoder.decode(valueDataView.buffer);
+  log(`  ${labelOfDataSource} Data: ` + key +
+      '\n    (Hex) ' + hexString +
+      '\n    (ASCII) ' + asciiString);
+};
+	</script>
+</head>
+<body>
+	<div class="col-md-4 col-md-offset-4">
+		<div>
+			<p>Profile Detail</p>
+		</div>
+		<div>
+			<center>
+				<table class="table table-hover text-center">
+					<tr><td>Roll Numbers </td><td><%= roll %></td></tr>
+					<tr><td>Email </td><td><%= email %></td></tr>
+				</table>
+			</center>
+			
+
+			<!-- Create table with multiple buttons for each course id attendence -->
+			<center>
+				<table class="table table-hover text-center">
+				<% if (course.length > 0) {%>
+					<tr>
+						<td>Course ID</td>
+						<td>Mark Attendence</td>
+					</tr>
+					<% for (i = 0; i < course.length; i++) { %>
+						<tr><td><%= course[i] %></td><td><input type = "button" value = "Mark Attendence" class="btn btn-success" id="aa" onclick="onButtonClick('<%= course[i]%>')"></td></tr>
+					<% } %>
+
+				<% } %>
+
+
+				
+				</table>
+
+				<div id="log"></div>
+
+			<!-- <input type="submit" value="Mark Attendence" class="btn btn-success" id="aa"> -->
+
+		</div>
+		<div class="abc">
+			<a href="/logout">Logout</a>
+		</div>
+	</div>
+</body>
+</html>

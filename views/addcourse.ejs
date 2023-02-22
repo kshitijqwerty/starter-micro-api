@@ -16,7 +16,7 @@
 
 				$.ajax({
 					type: 'POST',
-					url: '/login',
+					url: '/addCourse',
 					data: $('#form').serialize(),
 					dataType: "json",
 					success: function(response){
@@ -44,23 +44,25 @@
 <body>
 	<div class="col-md-4 col-md-offset-4">
 		<div>
-			<p>Login</p>
+			<p>Add Course For Attendence</p>
 		</div>
 		<div class="form-group">
 			<form id="form" method="post" >
-				<input type="text" name="email" placeholder="E-mail" required="" class="form-control"><br/>
-				<input type="password" name="password" placeholder="Password" required="" class="form-control"><br/>
-				<input type="submit" value="Login" class="btn btn-success">
+				<input type="text" name="course" placeholder="Course ID" required="" class="form-control"><br/>
+                <input type="text" name="date" placeholder="DD/MM/YY" required="" class="form-control"><br/>
+                <input type="text" name="dname" placeholder="Device Name" required="" class="form-control"><br/>
+                <input type="text" name="uuid" placeholder="UUID" required="" class="form-control"><br/>
+                <input type="text" name="payload" placeholder="payload" required="" class="form-control"><br/>
+				<input type="submit" value="Add Course" class="btn btn-success">
 			</form>
 		</div>
 		<div class="mssg bg-danger">
-			<span id="check" ></span>
+			<span id="check"></span>
 		</div>
-		<div id="LangTable"><a href="/profile" id="aa"></a>
+		<div>
+			<span>Already Registered! <a href="/login">Login</a></span>
 		</div>
-		<div><span>Do you forgot password?</span><a href="/forgetpass">Click here</a>
-		<div><span>Create a new Account?</span><a href="/">Register here</a>
-
+		<div id="LangTable"><a href="/addCourse" id="aa"></a>
 		</div>
 		
 	</div>
