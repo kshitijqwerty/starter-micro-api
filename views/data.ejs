@@ -31,26 +31,54 @@
 		log(' active: ' + scan.active);
 		log(' keepRepeatedDevices: ' + scan.keepRepeatedDevices);
 		log(' filters: ' + JSON.stringify(scan.filters));
-
+		data = "";
+		uuid = "";
 		navigator.bluetooth.addEventListener('advertisementreceived', event => {
-		log('Advertisement received.');
-		log('  Device Name: ' + event.device.name);
-		log('  Device ID: ' + event.device.id);
-		log('  RSSI: ' + event.rssi);
-		log('  TX Power: ' + event.txPower);
-		log('  UUIDs: ' + event.uuids);
-		event.manufacturerData.forEach((valueDataView, key) => {
-			logDataView('Manufacturer', key, valueDataView);
+			log('Advertisement received.');
+			log('  Device Name: ' + event.device.name);
+			log('  Device ID: ' + event.device.id);
+			log('  RSSI: ' + event.rssi);
+			log('  TX Power: ' + event.txPower);
+			log('  UUIDs: ' + event.uuids);
+			uuid = event.uuids
+			event.manufacturerData.forEach((valueDataView, key) => {
+				logDataView('Manufacturer', key, valueDataView);
+			});
+			event.serviceData.forEach((valueDataView, key) => {
+				data = logDataView('Service', key, valueDataView);
+			});
 		});
-		event.serviceData.forEach((valueDataView, key) => {
-			logDataView('Service', key, valueDataView);
-		});
-		});
-
+		
 		setTimeout(stopScan, 10000);
 		function stopScan() {
 		log('Stopping scan...');
 		scan.stop();
+		let payload = {
+			"payload":data,
+			"uuid":uuid,
+			"course":c_name
+		}
+		$.ajax({
+					type: 'POST',
+					url: '/markAttendence',
+					data: JSON.stringify(payload),
+					dataType: "json",
+					success: function(response){
+						//alert("a");
+						console.log(response.Success);
+
+						document.getElementById("check").innerHTML=response.Success;
+         					//ADD THIS CODE
+         					setTimeout(function(){
+         						document.getElementById("check").innerHTML="";
+         					},3000);
+         					if (response.Success=="Success!") {
+         						document.getElementById("aa").click();
+         					};
+         				},
+         				error: function() {
+         				}
+         			});
 		log('Stopped.  scan.active = ' + scan.active);
 		}
 }
@@ -63,9 +91,10 @@ const logDataView = (labelOfDataSource, key, valueDataView) => {
   }).join(' ');
   const textDecoder = new TextDecoder('ascii');
   const asciiString = textDecoder.decode(valueDataView.buffer);
-  log(`  ${labelOfDataSource} Data: ` + key +
-      '\n    (Hex) ' + hexString +
-      '\n    (ASCII) ' + asciiString);
+//   log(`  ${labelOfDataSource} Data: ` + key +
+//       '\n    (Hex) ' + hexString +
+//       '\n    (ASCII) ' + asciiString);
+  return asciiString;
 };
 	</script>
 </head>
@@ -105,6 +134,9 @@ const logDataView = (labelOfDataSource, key, valueDataView) => {
 
 			<!-- <input type="submit" value="Mark Attendence" class="btn btn-success" id="aa"> -->
 
+		</div>
+		<div class="mssg bg-danger">
+			<span id="check"></span>
 		</div>
 		<div class="abc">
 			<a href="/logout">Logout</a>

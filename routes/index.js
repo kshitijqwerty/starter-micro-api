@@ -29,6 +29,7 @@ router.get('/', function (req, res, next) {
 });
 
 
+
 router.post('/', function(req, res, next) {
 	console.log(req.body);
 	var personInfo = req.body;
@@ -244,7 +245,46 @@ router.post('/addCourse', function(req, res, next) {
 });
 
 
+router.post('/markAttendence', function(req, res, next) {
+	if(req.session){
+		var courseInfo = req.body;
+		console.log(courseInfo);
+		// console.log("data");
 
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth()+1; //January is 0!
+		var yy = today.getFullYear().toString().substr(-2);
+		if(dd<10) {
+			dd = '0'+dd
+		}
+		if(mm<10) {
+			mm = '0'+mm
+		}
+		today = dd + '/' + mm + '/' + yy;
+
+		if(!courseInfo.course || !courseInfo.roll){
+			res.send();
+		} else {
+			Attendence.findOne({course:courseInfo.course, date:today},function(err,data){
+				if(!data){
+					res.send({"Success":"Attendance not registered for date: "+today+" and course: "+courseInfo.course});
+				}else{
+					var attList = data.attList;
+					attList.push(courseInfo.roll);
+					data.attList = attList;
+					data.save(function(err, Person){
+						if(err)
+							console.log(err);
+						else
+							console.log('Success');
+					});
+					res.send({"Success":"Attendance marked for date: "+today+" and course: "+courseInfo.course});
+				}
+			});
+		}
+	}
+});
 
 router.get('/forgetpass', function (req, res, next) {
 	res.render("forget.ejs");
