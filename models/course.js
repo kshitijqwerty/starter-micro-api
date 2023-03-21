@@ -14,7 +14,7 @@ const courseSchema = new Schema({
     
     expireAt: {
         type: Date,
-        expires: 43200000,
+        expires: 43200000000,
         default: Date.now
     }
 

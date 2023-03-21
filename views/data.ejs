@@ -14,49 +14,54 @@
 		//  document.write(text + "<br>");
 		}
 
-		async function onButtonClick(c_name) {
-		let filters = [];
+		async function onButtonClick(c_name,roll) {
+		// let filters = [];
 
-		let filterName = c_name;
-		if (filterName) {
-			filters.push({name: filterName});
-		}
-		let options = {};
-		options.filters = filters;
-		// log('Requesting Bluetooth Scan with options: ' + JSON.stringify(options));
-		const scan = await navigator.bluetooth.requestLEScan(options);
+		// let filterName = c_name;
+		// if (filterName) {
+		// 	filters.push({name: filterName});
+		// }
+		// let options = {};
+		// options.filters = filters;
+		// // log('Requesting Bluetooth Scan with options: ' + JSON.stringify(options));
+		// const scan = await navigator.bluetooth.requestLEScan(options);
 
-		// log('Scan started with:');
-		// log(' acceptAllAdvertisements: ' + scan.acceptAllAdvertisements);
-		log(' active: ' + scan.active);
-		log(' keepRepeatedDevices: ' + scan.keepRepeatedDevices);
-		log(' filters: ' + JSON.stringify(scan.filters));
-		data = "";
-		uuid = "";
-		navigator.bluetooth.addEventListener('advertisementreceived', event => {
-			log('Advertisement received.');
-			log('  Device Name: ' + event.device.name);
-			log('  Device ID: ' + event.device.id);
-			log('  RSSI: ' + event.rssi);
-			log('  TX Power: ' + event.txPower);
-			log('  UUIDs: ' + event.uuids);
-			uuid = event.uuids
-			event.manufacturerData.forEach((valueDataView, key) => {
-				logDataView('Manufacturer', key, valueDataView);
-			});
-			event.serviceData.forEach((valueDataView, key) => {
-				data = logDataView('Service', key, valueDataView);
-			});
-		});
+		// // log('Scan started with:');
+		// // log(' acceptAllAdvertisements: ' + scan.acceptAllAdvertisements);
+		// log(' active: ' + scan.active);
+		// log(' keepRepeatedDevices: ' + scan.keepRepeatedDevices);
+		// log(' filters: ' + JSON.stringify(scan.filters));
+		// data = "";
+		// uuid = "";
+		// navigator.bluetooth.addEventListener('advertisementreceived', event => {
+		// 	log('Advertisement received.');
+		// 	log('  Device Name: ' + event.device.name);
+		// 	log('  Device ID: ' + event.device.id);
+		// 	log('  RSSI: ' + event.rssi);
+		// 	log('  TX Power: ' + event.txPower);
+		// 	log('  UUIDs: ' + event.uuids);
+		// 	uuid = event.uuids
+		// 	event.manufacturerData.forEach((valueDataView, key) => {
+		// 		logDataView('Manufacturer', key, valueDataView);
+		// 	});
+		// 	event.serviceData.forEach((valueDataView, key) => {
+		// 		data = logDataView('Service', key, valueDataView);
+		// 	});
+		// });
 		
-		setTimeout(stopScan, 10000);
-		function stopScan() {
-		log('Stopping scan...');
-		scan.stop();
+		// setTimeout(stopScan, 10000);
+		// function stopScan() {
+		// log('Stopping scan...');
+		// scan.stop();
+		// let payload = {
+		// 	"payload":data,
+		// 	"uuid":uuid,
+		// 	"course":c_name
+		// }
 		let payload = {
-			"payload":data,
-			"uuid":uuid,
-			"course":c_name
+			"payload":"test",
+				"uuid":"yyyfg",
+				"course": "CSE202"
 		}
 		$.ajax({
 					type: 'POST',
@@ -79,9 +84,9 @@
          				error: function() {
          				}
          			});
-		log('Stopped.  scan.active = ' + scan.active);
+		// log('Stopped.  scan.active = ' + scan.active);
 		}
-}
+// }
 
 /* Utils */
 

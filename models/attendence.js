@@ -7,10 +7,7 @@ const attendenceSchema = new Schema({
 
     date: {type: String},
 
-    attList : [{
-        student_roll: {type: String},
-        status: {type: String},
-    }]
+    attList : [String]
     
 }, { timestamps: true });
 
