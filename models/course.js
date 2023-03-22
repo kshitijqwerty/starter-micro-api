@@ -12,13 +12,13 @@ const courseSchema = new Schema({
     payload : {type: String},
 
     
-    expireAt: {
-        type: Date,
-        expires: 43200000000,
-        default: Date.now
-    }
+    // expireAt: {
+    //     type: Date,
+    //     expires: 43200000000,
+    //     default: Date.now
+    // }
 
-    // createdAt: { type: Date, expires: '43200', default: Date.now }
+    createdAt: { type: Date, expires: '3m',index: true, default: Date.now }
     
 }, { timestamps: true });
 
