@@ -18,11 +18,11 @@
 		let filters = [];
 
 		let filterName = c_name;
-		// if (filterName) {
-		// 	filters.push({name: filterName});
-		// }
+		if (filterName) {
+			filters.push({name: filterName});
+		}
 		let options = {};
-		// options.filters = filters;
+		options.filters = filters;
 		// log('Requesting Bluetooth Scan with options: ' + JSON.stringify(options));
 		const scan = await navigator.bluetooth.requestLEScan(options);
 
